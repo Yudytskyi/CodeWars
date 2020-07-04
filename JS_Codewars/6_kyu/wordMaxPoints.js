@@ -14,3 +14,10 @@ function high(x) {
                 points= Number(points) + alphabet.indexOf(letter)),word]);
     return arrayWordsAndPoints.filter(i=>i[0]===Math.max.apply(null,arrayWordsAndPoints.map(i=>i[0])))[0][1];
 }
+
+
+// from arhigod
+// function high(s){
+//     let as = s.split(' ').map(s=>[...s].reduce((a,b)=>a+b.charCodeAt(0)-96,0));
+//     return s.split(' ')[as.indexOf(Math.max(...as))];
+// }
