@@ -18,6 +18,7 @@ myArrayProto.push = function (...args) {
     for (let i in args) {
         this[this.length++] = args[i]
     }
+    return this;
 };
 
 myArrayProto.find = function () {
@@ -29,11 +30,10 @@ myArrayProto.includes = function (searchElement, fromIndex = 0) {
             : this.length + fromIndex : fromIndex;
     for (let i = index; i < this.length; i++) {
         if (this[i] === searchElement) {
-            return true
+            return true;
         }
     }
-    ;
-    return false
+    return false;
 };
 
 myArrayProto.join = function (separator = ',') {
@@ -56,7 +56,6 @@ myArrayProto.filter = function (collback, thisArg) {
             newArray[n++] = this[i]
         }
     }
-    ;
     return newArray;
 };
 
@@ -69,7 +68,40 @@ myArrayProto.map = function (collback, thisArg) {
     return newArray;
 };
 
-myArrayProto.reduse = function () {
+myArrayProto.reduse = function (callback, initialValue) {
+    if (this.length === 0) {
+        return initialValue ? initialValue : TypeError;
+    }
+
+    let countElelments = 0, result;
+
+    for (let i of this) {
+        if (i) {
+            countElelments++;
+            if (countElelments === 1) {
+                result = i;
+            }
+        }
+    }
+
+    if (countElelments === 1 && !initialValue) {
+        return result;
+    }
+
+    let n = 1;
+
+    if (initialValue) {
+        result = initialValue;
+        n = 0;
+    }
+
+    for (let i = n; i < this.length; i++) {
+        if (this[i]) {
+            result += callback(this[i], i, this)
+        }
+    }
+
+    return result;
 };
 
 myArrayProto.flat = function () {
@@ -83,18 +115,32 @@ const arr = new MyArray();
 const arr1 = new MyArray();
 const arr2 = new Array();
 
-arr.push(2, 5, 4, 7, 9);
-
 console.log(`arr.isMyArray(arr1) => ${arr.isMyArray(arr1)}`);
 console.log(`arr.isMyArray(arr2) => ${arr.isMyArray(arr2)}`);
+console.log(' ');
 
-console.dir('arrPush =>');
-console.table(arr);
+arr.push(2, 5, 4, 7, 9);
+console.log('arr.Push(2, 5, 4, 7, 9) =>');
+console.log(arr);
+console.log(' ');
 
-const arrJoin = arr.join('-00-');
-console.log(arrJoin);
 
-// const arrF = arr.filter(i => i % 2 === 0);
-// const arrM = arr.map(i => i % 2);
-//
-// // console.log(arrM)
+const arrJoin = arr.join('-0-');
+console.log(`arr.join('-0-') => ${arrJoin}`);
+console.log(' ');
+
+const arrFilter = arr.filter(i => i > 4);
+console.log(`arr.filter(i > 4) => ${arrFilter}`);
+console.log(' ');
+
+const arrMap = arr.map((i, n, a) => n < a.length - 1 ? i * a[n + 1] : i);
+console.log(`arr.map(n < a.length-1 ? i * a[n + 1] : i) => ${arrMap}`);
+console.log(' ');
+
+arr[2] = '';
+console.log(arr)
+const arrReduse = arr.reduse(i => i + 1, 8);
+console.log(`arr.reduse( i + 1) => ${arrReduse}`);
+console.log(`arr1.reduse( i + 1) => ${arr1.reduse(i => i + 1)}`);
+
+console.log(' ');
